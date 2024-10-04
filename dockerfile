@@ -1,34 +1,23 @@
-# Use the official Node.js image
-FROM node:20
+# Use a lightweight Node.js base image
+FROM node:alpine
 
-# Install Python and pip
-RUN apt-get update && \
-    apt-get install -y python3 python3-venv python3-pip && \
-    apt-get clean
+# Install Python
+RUN apk add --no-cache python3 py3-pip
 
-# Create a virtual environment for Python packages
-RUN python3 -m venv /venv
-
-# Activate the virtual environment and install yt-dlp
-RUN /venv/bin/pip install yt-dlp
-
-# Create a directory for your app
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if available)
+# Copy package files to the working directory
 COPY package*.json ./
 
-# Install npm dependencies
+# Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Copy the rest of your application files to the working directory
 COPY . .
 
-# Create a directory for downloads
-RUN mkdir downloads
+# Expose the port your app runs on (replace 3000 with your port if different)
+EXPOSE 3000
 
-# Expose the port
-EXPOSE 10000
-
-# Start the application
-CMD ["node", "index.js"]
+# Command to run your application
+CMD ["npm", "start"]
