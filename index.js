@@ -29,6 +29,10 @@ const downloadVideo = (url, platform, res) => {
   });
 };
 
+app.get("/",(req,res)=>{
+  res.send("Hi There")
+})
+
 app.post('/download/:platform', (req, res) => {
   const { url } = req.body;
   const { platform } = req.params;
