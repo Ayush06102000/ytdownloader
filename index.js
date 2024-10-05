@@ -15,10 +15,7 @@ app.get('/download', async (req, res) => {
 
     try {
         // Execute yt-dlp command to download the video
-        await exec('yt-dlp', {
-            output: `${downloadPath}/%(title)s.%(ext)s`, // Output path for downloaded files
-            args: [videoUrl] // Pass the video URL
-        });
+        await exec(`yt-dlp -o "${downloadPath}/%(title)s.%(ext)s" "${videoUrl}"`);
 
         res.send('Video downloaded successfully.');
     } catch (error) {
