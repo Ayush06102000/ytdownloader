@@ -3,8 +3,14 @@ const { exec } = require('yt-dlp-exec');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+
 // Create the downloads directory if it doesn't exist
 const downloadPath = './';
+app.use(express.json());
+
+app.get("/",(req,res) => {
+    res.send("Hi there");
+});
 
 app.get('/download', async (req, res) => {
     const videoUrl = req.body.url; // Assuming you're passing the URL as a query parameter
