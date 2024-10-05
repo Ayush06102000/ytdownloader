@@ -1,21 +1,23 @@
-{
-  "name": "backend",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js" // Ensure this line is included
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "axios": "^1.7.7",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.0",
-    "instaloader": "^1.0.1",
-    "yt-dlp-exec": "^1.0.2"
-  }
-}
+# Use the official Node.js image
+FROM node:18
+
+# Set the working directory
+WORKDIR /app
+
+# Create the downloads directory
+RUN mkdir -p /app/downloads
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose the port
+EXPOSE 3000
+
+# Start the application
+CMD ["npm", "start"]
