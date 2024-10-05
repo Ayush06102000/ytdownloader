@@ -1,48 +1,33 @@
 const express = require('express');
-const cors = require('cors');
-const { exec } = require('child_process');
-const path = require('path');
-
+const { exec } = require('yt-dlp-exec');
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(cors());
-app.use(express.json());
+// Create the downloads directory if it doesn't exist
+const downloadPath = '/app/downloads';
 
-const downloadVideo = (url, platform, res) => {
-  const outputPath = path.join(__dirname, 'downloads');
-  let command;
+app.get('/download', async (req, res) => {
+    const videoUrl = req.query.url; // Assuming you're passing the URL as a query parameter
 
-  if (platform === 'youtube') {
-    command = `yt-dlp -o "${outputPath}/%(title)s.%(ext)s" "${url}"`;
-  } else if (platform === 'instagram') {
-    command = `instaloader --dirname-pattern "${outputPath}" --filename-pattern "{profile}_{mediaid}" -- "${url}"`;
-  } else {
-    return res.status(400).send({ error: 'Invalid platform' });
-  }
-
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error downloading video: ${error.message}`);
-      return res.status(500).send({ error: `Failed to download from ${platform}`, details: stderr });
+    if (!videoUrl) {
+        return res.status(400).send('Video URL is required.');
     }
-    res.send({ message: `${platform} content download completed!`, details: stdout });
-  });
-};
 
-app.get("/",(req,res)=>{
-  res.send("Hi There")
-})
+    try {
+        // Execute yt-dlp command to download the video
+        await exec('yt-dlp', {
+            output: `${downloadPath}/%(title)s.%(ext)s`, // Output path for downloaded files
+            args: [videoUrl] // Pass the video URL
+        });
 
-app.post('/download/:platform', (req, res) => {
-  const { url } = req.body;
-  const { platform } = req.params;
-
-  if (!url) {
-    return res.status(400).send({ error: 'No URL provided' });
-  }
-
-  downloadVideo(url, platform, res);
+        res.send('Video downloaded successfully.');
+    } catch (error) {
+        console.error('Error downloading video:', error);
+        res.status(500).send('Error downloading video.');
+    }
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
