@@ -1,23 +1,21 @@
-# Use a lightweight Node.js base image
-FROM node:alpine
-
-# Install Python
-RUN apk add --no-cache python3 py3-pip
-
-# Set the working directory
-WORKDIR /app
-
-# Copy package files to the working directory
-COPY package*.json ./
-
-# Install dependencies
-RUN npm install
-
-# Copy the rest of your application files to the working directory
-COPY . .
-
-# Expose the port your app runs on (replace 3000 with your port if different)
-EXPOSE 3000
-
-# Command to run your application
-CMD ["npm", "start"]
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js" // Ensure this line is included
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "instaloader": "^1.0.1",
+    "yt-dlp-exec": "^1.0.2"
+  }
+}
