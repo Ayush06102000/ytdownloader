@@ -4,10 +4,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Create the downloads directory if it doesn't exist
-const downloadPath = '/app/downloads';
+const downloadPath = './';
 
 app.get('/download', async (req, res) => {
-    const videoUrl = req.query.url; // Assuming you're passing the URL as a query parameter
+    const videoUrl = req.body.url; // Assuming you're passing the URL as a query parameter
 
     if (!videoUrl) {
         return res.status(400).send('Video URL is required.');
